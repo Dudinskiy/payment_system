@@ -1,10 +1,13 @@
 package com.example.payment_system.service;
 
-import com.example.payment_system.entity.CashAccount;
-import com.example.payment_system.entity.CreditCard;
+import com.example.payment_system.dto.outData.CardDto;
+import com.example.payment_system.dto.inputData.BlockDeleteCardID;
+import com.example.payment_system.dto.inputData.CreateCardID;
+import com.example.payment_system.exception.GeneralAppException;
+import com.example.payment_system.exception.ValidationException;
 
 public interface CardService {
-    CreditCard createCreditCard(CashAccount account);
-    void blockCreditCard(String numberCard);
-    void deleteCreditCard(String numberCard);
+    CardDto createCard(CreateCardID inputData) throws ValidationException, GeneralAppException;
+    void blockCard(BlockDeleteCardID inputData) throws ValidationException, GeneralAppException;
+    void deleteCard(BlockDeleteCardID inputData) throws ValidationException, GeneralAppException;
 }

@@ -11,22 +11,23 @@ import java.math.BigDecimal;
 @Entity
 @Data
 @Accessors(chain = true)
-public class CashAccount extends BaseEntity {
+@Table(name = "cash_account")
+public class CashAccountEntity extends BaseEntity {
     @Column
     private String accountNumber;
 
     @Column
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Currency currency;
 
     @Column
     private BigDecimal amountCurrency;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Users user;
+    @JoinColumn(name = "users_id")
+    private UsersEntity user;
 
     @Column
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CashAccountStatus status;
 }

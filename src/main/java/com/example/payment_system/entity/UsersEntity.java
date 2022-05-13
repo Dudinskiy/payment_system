@@ -1,6 +1,7 @@
 package com.example.payment_system.entity;
 
 import com.example.payment_system.enums.UserRole;
+import com.example.payment_system.enums.UserStatus;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -10,7 +11,8 @@ import javax.persistence.*;
 @Entity
 @Data
 @Accessors(chain = true)
-public class Users extends BaseEntity {
+@Table(name = "users")
+public class UsersEntity extends BaseEntity {
     @Column
     private String firstName;
 
@@ -28,6 +30,9 @@ public class Users extends BaseEntity {
     private String userPassword;
 
     @Column
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 }

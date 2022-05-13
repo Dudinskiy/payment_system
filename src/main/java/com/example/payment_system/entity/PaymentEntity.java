@@ -12,24 +12,24 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Accessors(chain = true)
-public class Payment extends BaseEntity {
+@Table(name = "payment")
+public class PaymentEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pay_account")
-    private CashAccount payAccount;
+    @JoinColumn(name = "pay_account_id")
+    private CashAccountEntity payAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "beneficiary_account")
-    private CashAccount beneficAccount;
+    @JoinColumn(name = "beneficiary_account_id")
+    private CashAccountEntity beneficAccount;
 
-    @Column
     private BigDecimal amountPayment;
 
-    @Column
     @CreatedDate
     private LocalDateTime payDate;
 
-    @Column
-    @Enumerated
+    private String OtpPassword;
+
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 }

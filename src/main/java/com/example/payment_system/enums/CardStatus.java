@@ -1,6 +1,7 @@
 package com.example.payment_system.enums;
 
-public enum CreditCardStatus {
+public enum CardStatus {
+    INACTIVE,
     VALID,
     BLOCKED,
     CLOSED

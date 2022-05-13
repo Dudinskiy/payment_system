@@ -1,0 +1,226 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create_tables
+      author: Dudinskiy
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: users_pk
+                    nullable: false
+              - column:
+                  name: create_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: varchar
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: user_password
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_role
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_status
+                  type: varchar
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: cash_account
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: cashAccount_pk
+                    nullable: false
+              - column:
+                  name: create_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: account_number
+                  type: varchar
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: currency
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount_currency
+                  type: numeric
+                  constraints:
+                    nullable: true
+              - column:
+                  name: users_id
+                  type: UUID
+                  constraints:
+                    references: users(id)
+                    foreignKeyName: cashAccount_usersId_users_fk
+                    nullable: true
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: credit_card
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: creditCard_pk
+                    nullable: false
+              - column:
+                  name: create_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: card_number
+                  type: varchar
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: card_type
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: validity_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pin_code
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cvv_code
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cash_account_id
+                  type: UUID
+                  constraints:
+                    references: cash_account(id)
+                    foreignKeyName: creditCard_cashAccountId_cashAccount_fk
+                    nullable: true
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: payment
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: payment_pk
+                    nullable: false
+              - column:
+                  name: create_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pay_account_id
+                  type: UUID
+                  constraints:
+                    references: cash_account(id)
+                    foreignKeyName: payment_payAccountId_cashAccount_fk
+                    nullable: false
+              - column:
+                  name: beneficiary_account_id
+                  type: UUID
+                  constraints:
+                    references: cash_account(id)
+                    foreignKeyName: payment_beneficiaryAccountId_cashAccount_fk
+                    nullable: false
+              - column:
+                  name: amount_payment
+                  type: numeric
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pay_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: otp_password
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+
+
