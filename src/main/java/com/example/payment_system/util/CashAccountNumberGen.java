@@ -20,27 +20,27 @@ public class CashAccountNumberGen {
     private final AccountNumberControlCode controlCode;
     private final MOD97_10Code mod97_10Code;
 
-    public String getCashAccountNumber(CreateCashAccountID inputData) {
-        String basicBankAccountNumber = basicBankAccountNumber(inputData);
+    public String getCashAccountNumber(String currency) {
+        String basicBankAccountNumber = basicBankAccountNumber(currency);
         String ibanCode = mod97_10Code.getIBANCode(COUNTRY_CODE, basicBankAccountNumber);
 
         return COUNTRY_CODE + ibanCode + basicBankAccountNumber;
     }
 
-    private String basicBankAccountNumber(CreateCashAccountID inputData) {
-        String currencyCode = getCurrencyCode(inputData);
+    private String basicBankAccountNumber(String currency) {
+        String currencyCode = getCurrencyCode(currency);
         String partThree = getPartThree();
         String number = BANK_CODE + ACCOUNT_CLASS + "0" + currencyCode + partThree;
 
         return BANK_CODE + ACCOUNT_CLASS + controlCode.getControlNumeric(number) + currencyCode + partThree;
     }
 
-    private String getCurrencyCode(CreateCashAccountID inputData) {
-        if (inputData.getCurrency().toUpperCase().equals(Currency.UAH.toString())) {
+    private String getCurrencyCode(String currency) {
+        if (currency.toUpperCase().equals(Currency.UAH.toString())) {
             return UAH_CODE;
-        } else if (inputData.getCurrency().toUpperCase().equals(Currency.USD.toString())) {
+        } else if (currency.toUpperCase().equals(Currency.USD.toString())) {
             return USD_CODE;
-        } else if (inputData.getCurrency().toUpperCase().equals(Currency.EUR.toString())) {
+        } else if (currency.toUpperCase().equals(Currency.EUR.toString())) {
             return EUR_CODE;
         } else {
             return RUB_CODE;

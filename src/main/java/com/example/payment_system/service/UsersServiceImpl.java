@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,13 +25,13 @@ public class UsersServiceImpl implements UsersService {
     private final CashAccountRepository accountRepository;
     private final AccountService accountService;
     private final UsersDtoConverter usersDtoConverter;
-    private final UsersIDValidator inputDataValidator;
+    private final UsersIDValidator usersIDValidator;
 
 
     @Transactional
     @Override
     public UsersDto createClient(CreateUsersID inputData) throws ValidationException {
-        inputDataValidator.createUsersIDValidate(inputData);
+        usersIDValidator.createUsersIDValidate(inputData);
 
         UsersEntity savedUsers = usersRepository.save(usersDtoConverter.convertDtoToUsersClient(inputData));
 
@@ -48,7 +47,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Transactional
     @Override
-    public void deleteClientByPhone(DeleteUserID inputData) throws GeneralAppException {
+    public void deleteClientByPhone(DeleteUserID inputData) throws GeneralAppException, ValidationException {
+        usersIDValidator.deleteUserIDValidate(inputData);
+
         UsersEntity user = usersRepository.findByPhoneNumber(inputData.getPhoneNumber());
         if (user == null) {
             throw new GeneralAppException("Клиент с указанным номером телефона не существует");
@@ -63,9 +64,9 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
         }
-        user.setUserStatus(UserStatus.DELETED);
-        user.setPhoneNumber(user.getPhoneNumber() + "_uuid:" + user.getId());
-        user.setEmail(user.getEmail() + "_uuid:" + user.getId());
+        user.setUserStatus(UserStatus.DELETED)
+                .setPhoneNumber(user.getPhoneNumber() + "_uuid:" + user.getId())
+                .setEmail(user.getEmail() + "_uuid:" + user.getId());
         usersRepository.save(user);
     }
 }

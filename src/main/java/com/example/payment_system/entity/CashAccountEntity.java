@@ -21,7 +21,7 @@ public class CashAccountEntity extends BaseEntity {
     private Currency currency;
 
     @Column
-    private BigDecimal amountCurrency;
+    private BigDecimal currencyAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")

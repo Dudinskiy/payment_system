@@ -5,25 +5,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountNumberControlCode {
 
-
     public boolean isValidAccountNumberNumeric(String number) {
         String basicBankAccountNumber = number.substring(4);
         int controlNumeric = Character.getNumericValue(number.charAt(14));
 
-        return controlNumeric == getControlNumeric(basicBankAccountNumber);
+        StringBuilder preBBAN = new StringBuilder(basicBankAccountNumber);
+        preBBAN.setCharAt(10, '0');
+
+        return controlNumeric == getControlNumeric(preBBAN.toString());
     }
 
     public int getControlNumeric(String basicBankAccountNumber) {
         String bankCode = basicBankAccountNumber.substring(0, 6);
-        String accountNumber = basicBankAccountNumber.substring(6, (basicBankAccountNumber.length() - 1));
+        String accountNumber = basicBankAccountNumber.substring(6);
 
         int sumForBankCode = getSumForBankCode(bankCode);
         int sumForAccountNumber = getSumForAccountNumber(accountNumber);
 
-        int sum = sumForBankCode + sumForAccountNumber + basicBankAccountNumber.length();
+        int sum = sumForBankCode + sumForAccountNumber + accountNumber.length();
 
         String sumStr = String.valueOf(sum);
-
         int sumLastNumeric = Character.getNumericValue(sumStr.charAt(sumStr.length() - 1));
 
         return (sumLastNumeric * 7) % 10;

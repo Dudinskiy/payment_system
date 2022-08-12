@@ -12,7 +12,7 @@ public class CashAccountDtoConverter {
                 .setId(accountEntity.getId())
                 .setAccountNumber(accountEntity.getAccountNumber())
                 .setCurrency(accountEntity.getCurrency())
-                .setAmountCurrency(accountEntity.getAmountCurrency())
+                .setAmountCurrency(accountEntity.getCurrencyAmount())
                 .setUsers(accountEntity.getUser())
                 .setStatus(accountEntity.getStatus());
     }

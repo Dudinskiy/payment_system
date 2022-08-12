@@ -11,6 +11,6 @@ public interface UsersService {
 
     UsersDto createAdministrator(CreateUsersID createUserInputData);
 
-    void deleteClientByPhone(DeleteUserID deleteUserInputData) throws GeneralAppException;
+    void deleteClientByPhone(DeleteUserID deleteUserInputData) throws GeneralAppException, ValidationException;
 
 }

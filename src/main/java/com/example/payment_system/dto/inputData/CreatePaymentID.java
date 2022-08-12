@@ -11,5 +11,5 @@ public class CreatePaymentID {
     private String benefAccountNumber;
     private String payCardNumber;
     private String benefCardNumber;
-    private String amountPayment;
+    private String currencyAmount;
 }

@@ -1,7 +1,7 @@
 package com.example.payment_system.enums;
 
 public enum CashAccountStatus {
-    VALID,
+    ACTIVE,
     BLOCKED,
     CLOSED
 }

@@ -5,18 +5,17 @@ import com.example.payment_system.dto.inputData.CreatePaymentID;
 import com.example.payment_system.exception.ValidationException;
 import com.example.payment_system.util.AccountNumberControlCode;
 import com.example.payment_system.util.MOD97_10Code;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-@AllArgsConstructor
 public class PaymentIDValidator extends IDValidator {
-    private final MOD97_10Code mod97_10Code;
-    private final AccountNumberControlCode numberControlCode;
+    public PaymentIDValidator(MOD97_10Code mod97_10Code,
+                              AccountNumberControlCode numberControlCode) {
+        super(mod97_10Code, numberControlCode);
+    }
 
     public void createPaymentIDValidate(CreatePaymentID inputData) throws ValidationException {
         String message = "";
@@ -38,41 +37,37 @@ public class PaymentIDValidator extends IDValidator {
                 (inputData.getBenefCardNumber() == null || inputData.getBenefCardNumber().isEmpty())) {
             message = message + "Реквизиты получателя платежа не заданы\n";
         }
-        if (inputData.getAmountPayment() == null || inputData.getAmountPayment().isEmpty()) {
-            message = message + "Поле AmountPayment не содержит значения\n";
-        }
-        if (inputData.getAmountPayment() != null && !inputData.getAmountPayment().isEmpty()) {
-            if (!isNumberAndHasRequiredAccuracy(inputData.getAmountPayment())) {
-                message = message + "Поле AmountPayment не является числом или имеет недопустимое значение";
-
-            } else if (lessThanMinAmount(inputData.getAmountPayment())) {
-                message = message + "Сумма платежа не может быть меньше чем 0.01\n";
-            }
-        }
-        if (inputData.getPayAccountNumber() != null && !inputData.getPayAccountNumber().isEmpty()) {
-            if (!numberControlCode.isValidAccountNumberNumeric(inputData.getPayAccountNumber())) {
-                message = message + "Поле PayAccountNumber имеет неверное значение\n";
-            }
-        }
-        if (inputData.getBenefAccountNumber() != null && !inputData.getBenefAccountNumber().isEmpty()) {
-            if (!numberControlCode.isValidAccountNumberNumeric(inputData.getBenefAccountNumber())) {
-                message = message + "Поле BeneficAccountNumber имеет неверное значение\n";
-            }
-        }
-        if (inputData.getPayAccountNumber() != null && !inputData.getPayAccountNumber().isEmpty()) {
-            if (!mod97_10Code.isValidIBanNumber(inputData.getPayAccountNumber())) {
-                message = message + "Поле PayAccountNumber имеет неверное значение\n";
-            }
-        }
-        if (inputData.getBenefAccountNumber() != null && !inputData.getBenefAccountNumber().isEmpty()) {
-            if (!mod97_10Code.isValidIBanNumber(inputData.getBenefCardNumber())) {
-                message = message + "Поле BeneficAccountNumber имеет неверное значение\n";
-            }
-        }
+        message = checkCurrencyAmountField(inputData.getCurrencyAmount(), message);
+        message = checkPayAccountNumberField(inputData.getPayAccountNumber(), message);
+        message = checkBenefAccountNumberField(inputData.getBenefAccountNumber(), message);
 
         if (!message.isEmpty()) {
             throw new ValidationException(message);
         }
+    }
+
+    public String checkPayAccountNumberField(String field, String message) {
+        if (field != null && !field.isEmpty()) {
+            if (!getNumberControlCode().isValidAccountNumberNumeric(field)) {
+                message = message + "Поле PayAccountNumber имеет неверное значение (BBAN)\n";
+            }
+            if (!getMod97_10Code().isValidIBanNumber(field)) {
+                message = message + "Поле PayAccountNumber имеет неверное значение (IBAN) \n";
+            }
+        }
+        return message;
+    }
+
+    public String checkBenefAccountNumberField(String field, String message) {
+        if (field != null && !field.isEmpty()) {
+            if (!getNumberControlCode().isValidAccountNumberNumeric(field)) {
+                message = message + "Поле BenefAccountNumber имеет неверное значение (BBAN)\n";
+            }
+            if (!getMod97_10Code().isValidIBanNumber(field)) {
+                message = message + "Поле BenefAccountNumber имеет неверное значение (IBAN)\n";
+            }
+        }
+        return message;
     }
 
     public void confirmPaymentIDValidate(ConfirmPaymentID inputData) throws ValidationException {
@@ -98,17 +93,11 @@ public class PaymentIDValidator extends IDValidator {
         }
     }
 
-    private boolean lessThanMinAmount(String payAmount) {
-        int compareRes = new BigDecimal(payAmount).compareTo(new BigDecimal("0.01"));
+    public boolean UUIDValidate(String uuid) {
+        String regUUID = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
 
-        return compareRes < 0;
-    }
-
-    private boolean isNumberAndHasRequiredAccuracy(String number) {
-        String regForNumber = "^([1-9]\\d*\\.\\d{1,2}|0\\.\\d{1,2}|0|[1-9]\\d+|[1-9])$";
-
-        Pattern pattern = Pattern.compile(regForNumber);
-        Matcher matcher = pattern.matcher(number);
+        Pattern pattern = Pattern.compile(regUUID);
+        Matcher matcher = pattern.matcher(uuid);
 
         return matcher.matches();
     }

@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class CreateCashAccountID {
-    private String phoneNumber;
-    private String currency;
+public class PutCurrencyToAccountID {
+    private String cashAccountNumber;
+    private String currencyAmount;
 }

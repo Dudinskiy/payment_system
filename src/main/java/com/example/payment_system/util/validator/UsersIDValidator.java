@@ -1,16 +1,20 @@
 package com.example.payment_system.util.validator;
 
 import com.example.payment_system.dto.inputData.*;
-import com.example.payment_system.enums.CardType;
-import com.example.payment_system.enums.Currency;
 import com.example.payment_system.exception.ValidationException;
+import com.example.payment_system.util.AccountNumberControlCode;
+import com.example.payment_system.util.MOD97_10Code;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class UsersIDValidator {
+public class UsersIDValidator extends IDValidator {
+    public UsersIDValidator(MOD97_10Code mod97_10Code,
+                            AccountNumberControlCode numberControlCode) {
+        super(mod97_10Code, numberControlCode);
+    }
 
     public void createUsersIDValidate(CreateUsersID inputData) throws ValidationException {
         String message = "";
@@ -18,51 +22,66 @@ public class UsersIDValidator {
         if (inputData == null) {
             throw new ValidationException("Объект CreateUsersID является null");
         }
-        if (inputData.getFirstName() == null || inputData.getFirstName().isEmpty()) {
-            message = message + "Поле FirstName не содержит значения\n";
-        }
-        if (inputData.getLastName() == null || inputData.getLastName().isEmpty()) {
-            message = message + "Поле LastName не содержит значения\n";
-        }
-        if (inputData.getPhoneNumber() == null || inputData.getPhoneNumber().isEmpty()) {
-            message = message + "Поле PhoneNumber не содержит значения\n";
-        }
-        if (inputData.getPhoneNumber() != null && !inputData.getPhoneNumber().isEmpty()) {
-            if (!phoneValidate(inputData.getPhoneNumber())) {
-                message = message + "Поле PhoneNumber имеет неверное значение\n";
-            }
-        }
-        if (inputData.getEmail() == null || inputData.getEmail().isEmpty()) {
-            message = message + "Поле Email не содержит значения\n";
-        }
-        if (inputData.getEmail() != null && !inputData.getEmail().isEmpty()) {
-            if (!emailValidate(inputData.getEmail())) {
-                message = message + "Поле Email имеет неверное значение\n";
-            }
-        }
-        if (inputData.getUserPassword() == null || inputData.getUserPassword().isEmpty()) {
-            message = message + "Значение поля Password не содержит значения\n";
-        }
-        if (inputData.getUserPassword() != null && !inputData.getUserPassword().isEmpty()) {
-            if (!passwordValidate(inputData.getUserPassword())) {
-                message = message + "Значение поля Password не отвечает требованиям\n";
-            }
-        }
+        message = checkFirstNameField(inputData.getFirstName(), message);
+        message = checkLastNameField(inputData.getLastName(), message);
+        message = checkPhoneNumberField(inputData.getPhoneNumber(), message);
+        message = checkEmailField(inputData.getEmail(), message);
+        message = checkUserPasswordField(inputData.getUserPassword(), message);
 
         if (!message.isEmpty()) {
             throw new ValidationException(message);
         }
     }
 
-    public boolean phoneValidate(String phone) {
-        String regForPhone = "^((\\+[\\- ]?38)[\\- ]?)?(\\(?(039)?(067)?(068)?(096)?(097)?" +
-                "(098)?(050)?(066)?(095)?(099)?(063)?(073)?(093)?" +
-                "(091)?(092)?(089)?(094)?\\)?[\\- ]?)?[\\d\\- ]{7,9}$";
+    public void deleteUserIDValidate(DeleteUserID inputData) throws ValidationException {
+        String message = "";
 
-        Pattern pattern = Pattern.compile(regForPhone);
-        Matcher matcher = pattern.matcher(phone);
+        if (inputData == null) {
+            throw new ValidationException("Объект DeleteUserID является null");
+        }
+        message = checkPhoneNumberField(inputData.getPhoneNumber(), message);
 
-        return matcher.matches();
+        if (!message.isEmpty()) {
+            throw new ValidationException(message);
+        }
+    }
+
+    public String checkFirstNameField(String field, String message) {
+        if (field == null || field.isEmpty()) {
+            message = message + "Поле FirstName не содержит значения\n";
+        }
+        return message;
+    }
+
+    public String checkLastNameField(String field, String message) {
+        if (field == null || field.isEmpty()) {
+            message = message + "Поле LastName не содержит значения\n";
+        }
+        return message;
+    }
+
+    public String checkEmailField(String field, String message) {
+        if (field == null || field.isEmpty()) {
+            message = message + "Поле Email не содержит значения\n";
+        }
+        if (field != null && !field.isEmpty()) {
+            if (!emailValidate(field)) {
+                message = message + "Поле Email имеет неверное значение\n";
+            }
+        }
+        return message;
+    }
+
+    public String checkUserPasswordField(String field, String message) {
+        if (field == null || field.isEmpty()) {
+            message = message + "Значение поля Password не содержит значения\n";
+        }
+        if (field != null && !field.isEmpty()) {
+            if (!passwordValidate(field)) {
+                message = message + "Значение поля Password не отвечает требованиям\n";
+            }
+        }
+        return message;
     }
 
     public boolean emailValidate(String email) {

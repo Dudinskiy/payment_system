@@ -1,5 +1,7 @@
 package com.example.payment_system.unit;
 
+import com.example.payment_system.util.AccountNumberControlCode;
+import com.example.payment_system.util.MOD97_10Code;
 import com.example.payment_system.util.validator.UsersIDValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,7 +77,7 @@ public class UsersIDValidatorTest {
 
     @BeforeEach
     public void init() {
-        validator = new UsersIDValidator();
+        validator = new UsersIDValidator(new MOD97_10Code(), new AccountNumberControlCode());
     }
 
     @Test

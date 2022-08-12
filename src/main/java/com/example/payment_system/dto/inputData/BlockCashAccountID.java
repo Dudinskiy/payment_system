@@ -6,5 +6,5 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class BlockCashAccountID {
-    private String accountNumber;
+    private String cashAccountNumber;
 }

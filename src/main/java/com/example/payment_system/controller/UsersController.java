@@ -27,7 +27,8 @@ public class UsersController {
     }
 
     @PostMapping("/delete-client")
-    public ResponseEntity<String> deleteClientByPhone(@RequestBody DeleteUserID inputData) throws GeneralAppException {
+    public ResponseEntity<String> deleteClientByPhone(@RequestBody DeleteUserID inputData)
+            throws GeneralAppException, ValidationException {
         usersService.deleteClientByPhone(inputData);
         return new ResponseEntity<>("Клиент удален", HttpStatus.OK);
     }

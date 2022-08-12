@@ -29,16 +29,16 @@ public class CardNumberGen {
         return number;
     }
 
-    private String getPartTwo(int size) {
-        int x = (int) Math.round((Math.random() + 0.1) * 1000000);
-        String str = Integer.toString(x);
+    public String getPartTwo(int size) {
+        long x = Math.round((Math.random() + 0.1) * 1000000000000000L);
+        String str = Long.toString(x);
 
         return str.substring(0, size);
     }
 
     private String getPartThree(int size) {
-        int x = (int) Math.round((Math.random() + 0.1) * 1000000);
-        String str = Integer.toString(x);
+        long x = Math.round((Math.random() + 0.1) * 1000000000000000L);
+        String str = Long.toString(x);
 
         return str.substring(0, size);
     }

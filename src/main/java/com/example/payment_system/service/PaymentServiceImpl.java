@@ -121,8 +121,8 @@ public class PaymentServiceImpl implements PaymentService {
             throw new GeneralAppException("Указанный счет получателя закрыт");
         }
 
-        payAllCashBefore = payAccount.getAmountCurrency();
-        compareRes = payAllCashBefore.compareTo(new BigDecimal(inputData.getAmountPayment()));
+        payAllCashBefore = payAccount.getCurrencyAmount();
+        compareRes = payAllCashBefore.compareTo(new BigDecimal(inputData.getCurrencyAmount()));
         if (compareRes == -1) {
             throw new GeneralAppException("Недостаточно средств на счете");
         }
@@ -130,7 +130,7 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentEntity savedPayment = paymentRep.save(new PaymentEntity()
                 .setPayAccount(payAccount)
                 .setBeneficAccount(benefAccount)
-                .setAmountPayment(new BigDecimal(inputData.getAmountPayment()))
+                .setAmountPayment(new BigDecimal(inputData.getCurrencyAmount()))
                 .setOtpPassword(password.getPassword(4))
                 .setStatus(PaymentStatus.NEW));
 
@@ -156,14 +156,14 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (inputData.getPassword().equals(payment.getOtpPassword())) {
             CashAccountEntity payAccount = accountRep.findByAccountNumber(payment.getPayAccount().getAccountNumber());
-            payAllCashAfter = payAccount.getAmountCurrency().subtract(payment.getAmountPayment());
-            payAccount.setAmountCurrency(payAllCashAfter);
+            payAllCashAfter = payAccount.getCurrencyAmount().subtract(payment.getAmountPayment());
+            payAccount.setCurrencyAmount(payAllCashAfter);
             accountRep.save(payAccount);
 
             //Надо ввести проверку на блокировку, доступность счета получателя
             CashAccountEntity benefAccount = accountRep.findByAccountNumber(payment.getBeneficAccount().getAccountNumber());
-            benefAllCashAfter = benefAccount.getAmountCurrency().add(payment.getAmountPayment());
-            benefAccount.setAmountCurrency(benefAllCashAfter);
+            benefAllCashAfter = benefAccount.getCurrencyAmount().add(payment.getAmountPayment());
+            benefAccount.setCurrencyAmount(benefAllCashAfter);
             accountRep.save(benefAccount);
 
             payment.setStatus(PaymentStatus.SUCCESSFUL);

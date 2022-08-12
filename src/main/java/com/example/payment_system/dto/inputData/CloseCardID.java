@@ -5,6 +5,6 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class BlockDeleteCardID {
+public class CloseCardID {
     private String cardNumber;
 }
